@@ -1,0 +1,47 @@
+/*
+ Thanks Tom Igoe for the code
+ This setups a potentiometer to "press" a button depending of if it is turned left or right by your handlebars.
+ */
+
+#include "Keyboard.h"
+const int buttonPin = 2;
+int buttonState = 0;
+
+void setup() {
+  // initialize the pushbutton pin as an input:
+  pinMode(buttonPin, INPUT);
+  // open the serial port:
+  Serial.begin(112500);
+  // initialize control over the keyboard:
+  Keyboard.begin();
+}
+
+void loop() {
+// read the state of the pushbutton value:
+  buttonState = digitalRead(buttonPin);
+
+  // check if the pushbutton is pressed.
+  // if it is, the buttonState is HIGH:
+  if (buttonState == HIGH) {
+    // press f:
+    Keyboard.press('f');
+  } else {
+    // let off f:
+    Keyboard.release('f');
+  }
+  int sensorValue = analogRead(A0);
+  if (sensorValue >= 533) {
+    // press a:
+    Keyboard.press('a');
+  } else {
+    // let off a:
+    Keyboard.release('a');
+  }
+  if (sensorValue <= 490) {
+    // press d:
+    Keyboard.press('d');
+  } else {
+    // let off d:
+    Keyboard.release('d');
+  }
+}
