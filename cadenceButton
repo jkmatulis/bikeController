@@ -1,0 +1,43 @@
+/*
+*Thanks Arvind Sanjeev for the code
+*This is a basic cadance sensor that holds down a button for as long as you cadence is above a certain speed.
+*My long term goal with this is to have it setup to look at speed, cadance, power(maybe to expensive), have have it
+work with a more modern controller.
+*/
+
+#include "Keyboard.h"
+ volatile byte half_revolutions;
+ unsigned int rpm;
+ unsigned long timeold;
+ 
+ 
+ void setup()
+ {
+   Serial.begin(115200);
+   attachInterrupt(0, magnet_detect, RISING);//Initialize intterrupt pin (Arduino digital pin 2)
+   half_revolutions = 0;
+   rpm = 0;
+   timeold = 0;
+   Keyboard.begin();
+ }
+ 
+ void loop()//Measure RPM
+ {
+   if (half_revolutions >= 20) { 
+     rpm = 30*1000/(millis() - timeold);
+     timeold = millis();
+     half_revolutions = 0;
+   }
+ 
+ }
+ void magnet_detect()//This function is called whenever a magnet/interrupt is detected by the arduino
+ {
+   half_revolutions++;
+   if (rpm >= 5) {
+    // press a:
+    Keyboard.press('a');
+  } else {
+    // let off a:
+    Keyboard.release('a');
+  }
+ }
